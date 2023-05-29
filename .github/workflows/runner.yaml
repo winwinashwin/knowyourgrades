@@ -1,0 +1,39 @@
+name: Check grades and notify clients
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 */3 * * *
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout monitor
+        uses: actions/checkout@v3
+      
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      
+      - name: Resolve python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Execute script
+        run: python main.py
+        env:
+          ENV: prod
+          LDAP_USR: ${{ secrets.LDAP_USR }}
+          LDAP_PWD: ${{ secrets.LDAP_PWD }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          CACHE_HASH_KEY: ${{ secrets.CACHE_HASH_KEY }}
+      
+      - name: Commit cache
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Automated cache commit
+          file_pattern: '*.pkl'
