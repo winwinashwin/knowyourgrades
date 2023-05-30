@@ -30,7 +30,6 @@ jobs:
           LDAP_USR: ${{ secrets.LDAP_USR }}
           LDAP_PWD: ${{ secrets.LDAP_PWD }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-          CACHE_HASH_KEY: ${{ secrets.CACHE_HASH_KEY }}
       
       - name: Commit cache
         uses: stefanzweifel/git-auto-commit-action@v4
